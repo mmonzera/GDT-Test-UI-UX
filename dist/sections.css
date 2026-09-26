@@ -1,0 +1,177 @@
+/* ============ 01 · Lompat Pulau — peta petualangan ============ */
+.islands{display:block;padding:0;overflow:visible}
+.map-scroll{margin:0 -6px;padding:6px 6px 14px}
+.map-board{position:relative;aspect-ratio:12/5;border:2px solid #133d33;border-radius:14px;box-shadow:8px 9px 0 #246456;overflow:hidden;
+  background:radial-gradient(circle,#ffffff55 1.2px,transparent 1.6px) 0 0/22px 22px,radial-gradient(ellipse at 30% 40%,#bff0e6,transparent 60%),#8fd9cd}
+.map-route{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.map-route path{fill:none;stroke:#133d33;stroke-width:2.5;stroke-dasharray:3 9;stroke-linecap:round;vector-effect:non-scaling-stroke;opacity:.55;animation:route-sail 30s linear infinite}
+@keyframes route-sail{to{stroke-dashoffset:-240}}
+.map-sea{position:absolute;font:italic 600 13px/1 'Bricolage Grotesque',sans-serif;letter-spacing:3px;text-transform:uppercase;color:#1c6a5c;opacity:.6;pointer-events:none;white-space:nowrap}
+.map-compass{position:absolute;right:2.2%;bottom:6%;width:62px;height:62px;overflow:visible}
+.map-compass circle{fill:#fff9e8;stroke:#133d33;stroke-width:2}
+.map-compass path{fill:#fff9e8;stroke:#133d33;stroke-width:1.5;stroke-linejoin:round}
+.map-compass path.n{fill:#fe7856}
+.map-compass text{font:800 11px 'Bricolage Grotesque',sans-serif;fill:#133d33;text-anchor:middle}
+.map-legend{position:absolute;left:2%;bottom:5%;font-size:12px;font-weight:700;background:#fff9e8;border:1.5px solid #133d33;border-radius:99px;padding:7px 12px;color:#173e33;box-shadow:2px 2px 0 #133d33}
+
+.isle{position:absolute;border:0;padding:0;background:none;display:block;text-align:center;color:#173e33;z-index:1;transition:scale .35s cubic-bezier(.2,.8,.2,1)}
+.isle-art{display:block;aspect-ratio:1;border-radius:50%;background-image:url('assets/islands.webp');background-size:300% 200%;border:2.5px solid #133d33;box-shadow:5px 6px 0 #133d3380;transition:box-shadow .3s,border-color .3s}
+.isle:nth-of-type(odd) .isle-art{animation:bob 6s ease-in-out infinite}
+.isle:nth-of-type(even) .isle-art{animation:bob 7s ease-in-out -2s infinite}
+@keyframes bob{50%{translate:0 -6px}}
+.isle-tag{position:relative;display:inline-flex;flex-direction:column;align-items:center;margin-top:-18px;background:#fff9e8;border:2px solid #133d33;border-radius:8px;padding:6px 12px 7px;box-shadow:3px 3px 0 #133d33;rotate:-3deg;max-width:112%}
+.isle:nth-of-type(even) .isle-tag{rotate:2.5deg}
+.isle-tag strong{font:800 16px/1.05 'Bricolage Grotesque',sans-serif;white-space:nowrap}
+.isle-tag small{font-size:11px;font-weight:700;color:#1b6c55;margin-top:3px;white-space:nowrap}
+.isle.soon .isle-art{filter:saturate(.55)}
+.isle.soon .isle-tag small{color:#6d7b70}
+.isle:hover{scale:1.06;z-index:3}
+.isle:hover .isle-art{box-shadow:8px 10px 0 #133d33}
+.isle.selected{z-index:4;scale:1.08}
+.isle.selected .isle-art{border-color:#ffdc54;box-shadow:0 0 0 5px #133d33,8px 10px 0 5px #133d33}
+.isle.selected .isle-tag{background:#ffdc54}
+.isle-pin{position:absolute;left:50%;top:-6px;translate:-50% -100%;background:#fe7856;color:#173e33;border:2px solid #133d33;border-radius:99px;padding:6px 11px;font-size:11px;font-weight:800;letter-spacing:.4px;white-space:nowrap;box-shadow:2px 3px 0 #133d33;animation:pin-drop .45s cubic-bezier(.3,1.6,.5,1)}
+.isle-pin:after{content:'';position:absolute;left:50%;bottom:-7px;width:10px;height:10px;background:inherit;border:solid #133d33;border-width:0 2px 2px 0;translate:-50% 0;rotate:45deg}
+@keyframes pin-drop{from{translate:-50% -160%;opacity:0}}
+.map-hint{display:none}
+
+/* ============ 02 · Pilihan Hemat — etalase + kupon ============ */
+#promocards,#popularcards{display:block;padding:0;overflow:visible;perspective:none}
+.deals{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:28px;align-items:stretch}
+.deals.solo{grid-template-columns:1fr}
+.deal-spot{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);background:#fff9e9;color:#203c2d;border:2px solid #51351e;border-radius:10px;box-shadow:8px 9px 0 #a96835;overflow:visible;min-height:430px}
+.deal-cover{border:0;border-right:2px solid #51351e;border-radius:8px 0 0 8px;background-image:url('assets/games.webp');background-size:300% 200%;min-height:100%;position:relative;overflow:hidden}
+.deal-cover:after{content:'';position:absolute;inset:0;background:linear-gradient(125deg,transparent 30%,#fff5 50%,transparent 70%);translate:-100% 0;transition:translate .8s}
+.deal-spot:hover .deal-cover:after{translate:100% 0}
+.deal-burst{position:absolute;left:-26px;top:-26px;width:116px;height:116px;display:grid;place-content:center;text-align:center;background:#ffde55;color:#422c14;border:2px solid #573817;font:800 38px/0.9 'Bricolage Grotesque',sans-serif;letter-spacing:-1.5px;rotate:-12deg;z-index:2;
+  clip-path:polygon(50% 0,61% 12%,76% 5%,80% 21%,96% 22%,90% 37%,100% 50%,90% 63%,96% 78%,80% 79%,76% 95%,61% 88%,50% 100%,39% 88%,24% 95%,20% 79%,4% 78%,10% 63%,0 50%,10% 37%,4% 22%,20% 21%,24% 5%,39% 12%);animation:burst-spin 14s linear infinite}
+.deal-burst small{font:800 11px 'DM Sans',sans-serif;letter-spacing:1.5px;margin-bottom:3px}
+@keyframes burst-spin{50%{rotate:-4deg;scale:1.05}}
+.deal-body{padding:36px 34px 30px;display:flex;flex-direction:column}
+.deal-kicker{font-size:11px;font-weight:800;letter-spacing:1.4px;color:#a0531f}
+.deal-body h3{font-size:clamp(34px,3.4vw,50px);line-height:.98;letter-spacing:-1.8px;margin:14px 0 8px}
+.deal-tags{margin:0;font-size:13px;font-weight:700;color:#536c58}
+.deal-desc{font-size:15px;color:#4c5a4b;margin:14px 0 0;max-width:34ch}
+.deal-price{margin-top:auto;padding-top:22px;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px}
+.deal-price del{font-size:15px;color:#667062}
+.deal-price strong{font:800 34px/1 'Bricolage Grotesque',sans-serif;color:#1b5b42;letter-spacing:-1px}
+.deal-price span{flex-basis:100%;font-size:12px;font-weight:700;color:#a0531f}
+.deal-actions{display:flex;gap:12px;margin-top:20px}
+.deal-actions .btn{background:#1b5b42;border:2px solid #51351e;box-shadow:3px 4px 0 #51351e}
+.deal-wish{width:50px;border:2px solid #51351e;border-radius:6px;background:#fff9e9;color:#1b5b42;font-size:22px;box-shadow:3px 4px 0 #51351e}
+.deal-wish.saved{color:#cf543c}
+
+.coupons{display:flex;flex-direction:column;gap:16px;min-width:0}
+.coupons-label{font-size:12px;font-weight:800;letter-spacing:1.6px;margin-bottom:-2px}
+.coupon{--notch:#f8b064;position:relative;flex:1;display:grid;grid-template-columns:92px minmax(0,1fr) 96px;align-items:stretch;background:#fff9e9;color:#203c2d;border:2px solid #51351e;border-radius:8px;box-shadow:5px 6px 0 #a96835;transition:translate .25s,box-shadow .25s,rotate .25s}
+.coupon:nth-child(odd){rotate:.8deg}
+.coupon:hover{translate:-3px -3px;box-shadow:8px 9px 0 #a96835;rotate:0deg}
+.coupon-thumb{border:0;border-right:2px solid #51351e;border-radius:6px 0 0 6px;background-image:url('assets/games.webp');background-size:300% 200%;min-height:92px}
+.coupon-info{padding:14px 16px;display:flex;flex-direction:column;justify-content:center;min-width:0}
+.coupon-info h3{font-size:18px;line-height:1.1;letter-spacing:-.4px}
+.coupon-info p{margin:3px 0 0;font-size:12px;color:#536c58;line-height:1.4}
+.coupon-info .price{margin-top:8px;font-size:15px;color:#1b5b42}
+.coupon-stub{position:relative;border-left:2px dashed #51351e99;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+.coupon-stub:before,.coupon-stub:after{content:'';position:absolute;left:-10px;width:18px;height:18px;border-radius:50%;background:var(--notch);border:2px solid #51351e}
+.coupon-stub:before{top:-11px;clip-path:inset(50% 0 0 0)}
+.coupon-stub:after{bottom:-11px;clip-path:inset(0 0 50% 0)}
+.coupon-stub strong{font:800 26px/1 'Bricolage Grotesque',sans-serif;color:#a0531f;letter-spacing:-1px}
+.coupon-stub .save-game{position:static;font-size:20px;color:#426b51}
+.coupon-stub .save-game.saved{color:#cf543c}
+
+/* ============ 03 · Pilih Ceritamu — tangga top 5 ============ */
+.ranks{list-style:none;margin:0;padding:18px 0 70px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:18px;align-items:start}
+.rank{position:relative;display:flex;align-items:flex-end;min-width:0}
+.rank:nth-child(2){--lift:18px}.rank:nth-child(3){--lift:36px}.rank:nth-child(4){--lift:54px}.rank:nth-child(5){--lift:70px}
+.rank{translate:0 var(--lift,0px)}
+.rank-num{position:absolute;left:-6px;bottom:78px;z-index:0;font:800 clamp(130px,14vw,200px)/.8 'Bricolage Grotesque',sans-serif;letter-spacing:-8px;color:#bda5e1;-webkit-text-stroke:2.5px #3d2f5b;text-shadow:6px 6px 0 #8065aa;pointer-events:none;transition:translate .35s cubic-bezier(.2,.8,.2,1)}
+.rank-card{position:relative;z-index:1;margin-left:38%;width:62%;background:#fff9e9;color:#203c2d;border:2px solid #3d2f5b;border-radius:6px;padding:6px;box-shadow:5px 6px 0 #8065aa;transition:translate .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s}
+.rank:hover .rank-card{translate:0 -8px;box-shadow:7px 12px 0 #8065aa}
+.rank:hover .rank-num{translate:-8px 0}
+.rank-cover{position:relative;display:block;width:100%;aspect-ratio:3/4;border:0;border-radius:3px;background-image:url('assets/games.webp');background-size:300% 200%}
+.rank-cover .discount{top:8px;left:auto;right:6px;font-size:12px;padding:5px 8px;rotate:6deg}
+.rank-crown{position:absolute;left:-14px;top:-16px;z-index:2;background:#ffde55;color:#3d2f5b;border:2px solid #3d2f5b;border-radius:4px;padding:6px 9px;font-size:11px;font-weight:800;letter-spacing:1px;white-space:nowrap;rotate:-8deg;box-shadow:2px 3px 0 #3d2f5b}
+.rank-info{position:relative;padding:11px 4px 5px}
+.rank-info h3{font-size:16px;line-height:1.1;padding-right:24px;letter-spacing:-.3px}
+.rank-info p{margin:4px 0 0;font-size:12px;color:#536c58;line-height:1.4}
+.rank-info .price{margin-top:8px;font-size:14px;color:#1b5b42;flex-wrap:wrap;gap:2px 8px}
+.rank-info .save-game{right:0;top:9px;color:#426b51}
+.rank-info .save-game.saved{color:#cf543c}
+.rank:first-child .rank-card{margin-left:30%;width:70%}
+.rank:first-child .rank-num{color:#ffde55;left:-10px}
+
+/* ============ dark ============ */
+body.dark .map-board{background:radial-gradient(circle,#ffffff22 1.2px,transparent 1.6px) 0 0/22px 22px,radial-gradient(ellipse at 30% 40%,#27706a,transparent 60%),#1b5652;border-color:#a8c4ab;box-shadow:8px 9px 0 #071e1a}
+body.dark .map-route path{stroke:#e4f7e7}
+body.dark .map-sea{color:#b9e8dc}
+body.dark .isle-art{border-color:#a8c4ab;box-shadow:5px 6px 0 #071e1a}
+body.dark .isle-tag,body.dark .map-legend{background:#243d32;color:#edf2d9;border-color:#a8c4ab;box-shadow:3px 3px 0 #071e1a}
+body.dark .isle-tag small{color:#b8db9e}
+body.dark .isle.soon .isle-tag small{color:#9fb0a2}
+body.dark .isle.selected .isle-tag{background:#ffdc54;color:#173e33;border-color:#133d33}
+body.dark .isle.selected .isle-tag small{color:#1b6c55}
+body.dark .isle.selected .isle-art{border-color:#ffdc54;box-shadow:0 0 0 5px #071e1a,8px 10px 0 5px #071e1a}
+body.dark .deal-spot,body.dark .coupon{background:#28362a;color:#fff0d5;border-color:#b59e6f;box-shadow:6px 7px 0 #221d14}
+body.dark .coupon{--notch:#533728}
+body.dark .deal-cover,body.dark .coupon-thumb{border-color:#b59e6f}
+body.dark .coupon-stub{border-color:#b59e6f99}
+body.dark .coupon-stub:before,body.dark .coupon-stub:after{border-color:#b59e6f}
+body.dark .deal-tags,body.dark .deal-desc,body.dark .coupon-info p{color:#bac9b3}
+body.dark .deal-price strong,body.dark .coupon-info .price{color:#f0d679}
+body.dark .deal-price del{color:#b8bfae}
+body.dark .deal-kicker,body.dark .deal-price span,body.dark .coupon-stub strong{color:#ffad87}
+body.dark .deal-wish{background:#28362a;color:#f0d679;border-color:#b59e6f;box-shadow:3px 4px 0 #221d14}
+body.dark .deal-actions .btn{background:#f0d679;color:#2a2317;border-color:#b59e6f;box-shadow:3px 4px 0 #221d14}
+body.dark .coupon-stub .save-game{color:#c7d5b9}
+body.dark .rank-card{background:#302c42;color:#fff0d5;border-color:#bc9ed9;box-shadow:5px 6px 0 #1a1429}
+body.dark .rank-num{color:#382b50;-webkit-text-stroke-color:#bc9ed9;text-shadow:6px 6px 0 #1a1429}
+body.dark .rank:first-child .rank-num{color:#ddbd59}
+body.dark .rank-info p{color:#c9bfdc}
+body.dark .rank-info .price{color:#f0d679}
+body.dark .rank-info .save-game{color:#c7d5b9}
+
+/* ============ responsive ============ */
+@media(max-width:1100px){
+  .deal-spot{grid-template-columns:1fr;min-height:0}
+  .deal-cover{min-height:240px;border-right:0;border-bottom:2px solid #51351e;border-radius:8px 8px 0 0}
+  .deal-burst{left:-14px;top:-22px}
+  .deal-body{padding:26px 26px 24px}
+  .coupon{grid-template-columns:78px minmax(0,1fr) 82px}
+  .ranks{display:flex;align-items:flex-end;overflow-x:auto;scroll-snap-type:x mandatory;padding:26px 6px 22px;margin:0 -6px;gap:14px}
+  .rank,.rank:nth-child(n){flex:0 0 250px;translate:none;scroll-snap-align:start}
+  .rank-num{font-size:170px}
+  .rank-num,.rank:first-child .rank-num{left:12px}
+}
+@media(max-width:850px){
+  .map-scroll{overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;margin:0 -24px;padding:30px 24px 16px}
+  .map-board{min-width:780px}
+  .map-legend{display:none}
+  .map-hint{display:block;text-align:center;margin:4px 0 0;font-size:12px;font-weight:700;letter-spacing:1px;opacity:.75}
+  .deals{grid-template-columns:1fr}
+  body.dark .deal-cover{border-color:#b59e6f}
+}
+@media(max-width:600px){
+  .map-scroll{margin:0 -20px;padding:30px 20px 16px}
+  .deal-body h3{font-size:34px}
+  .deal-burst{width:96px;height:96px;font-size:30px}
+  .deal-actions .btn{flex:1;justify-content:space-between}
+  .coupon{grid-template-columns:70px minmax(0,1fr) 72px}
+  .coupon-info{padding:12px}
+  .coupon-info h3{font-size:16px}
+  .coupon-stub strong{font-size:21px}
+  .ranks{margin:0 -20px;padding:26px 20px 22px}
+  .rank,.rank:nth-child(n){flex-basis:228px}
+}
+@media(prefers-reduced-motion:reduce){
+  .map-route path,.isle-art,.deal-burst,.isle-pin{animation:none!important}
+}
+.motion-paused .map-route path,.motion-paused .isle-art,.motion-paused .deal-burst,.motion-paused .isle-pin{animation:none!important}
+
+/* ============ hero: tagline ikut alur, bukan absolute ============ */
+.hero{padding-top:170px}
+.hero h1{font-size:min(clamp(68px,7.5vw,112px),10vh)}
+.hero-bottom{position:static;margin-top:26px;padding:0;justify-content:flex-end}
+/* konten hero nempel ke bawah: CTA & tagline tetap di posisi sama walau judul 1 atau 2 baris */
+.hero-copy{margin-top:auto;padding-top:16px}
+@media(max-width:850px){.hero h1{font-size:min(72px,10vh)}}
+@media(max-width:600px){.hero{padding-top:182px}.hero h1{font-size:clamp(46px,min(15vw,8vh),60px)}.hero-bottom{margin-top:20px}}
