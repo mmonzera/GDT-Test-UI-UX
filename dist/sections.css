@@ -23,6 +23,7 @@
 .isle:nth-of-type(even) .isle-tag{rotate:2.5deg}
 .isle-tag strong{font:800 16px/1.05 'Bricolage Grotesque',sans-serif;white-space:nowrap}
 .isle-tag small{font-size:11px;font-weight:700;color:#1b6c55;margin-top:3px;white-space:nowrap}
+.isle.soon{cursor:not-allowed;opacity:.7}
 .isle.soon .isle-art{filter:saturate(.55)}
 .isle.soon .isle-tag small{color:#6d7b70}
 .isle:hover{scale:1.06;z-index:3}
